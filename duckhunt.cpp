@@ -34,13 +34,20 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 600
-
 #define MAX_DUCKS 2
 
 #define rnd() (float)rand() / (float)RAND_MAX
+
+//Gerardo
+//Added for Text
+#include "ppm.h"
+#include "log.h"
+extern "C" {
+#include "fonts.h"
+}
+
 
 //X Windows variables
 Display *dpy;
@@ -78,6 +85,8 @@ struct Game {
     Duck *duck;
     int n;
     float floor;
+    Shape box1[1];
+
     ~Game()
     {
         delete [] duck;
@@ -88,6 +97,17 @@ struct Game {
         bullets = 3;
         duck = new Duck[MAX_DUCKS];
         n = 0;
+	//Gerardo
+	//Added for Box
+	for (int i = 0; i< 1; i++) {
+		box1[i].width = 45;
+		box1[i].height = 35;
+		box1[i].center.x = WINDOW_WIDTH - 675;
+		box1[i].center.y = WINDOW_HEIGHT - 550;
+		//box1[i].center.x = WINDOW_HEIGHT - 550;
+		//box1[i].center.y = WINDOW_WIDTH - 50;
+		box1[i].center.z = 0;
+	}
         floor = 100;
         duck->s.width = 50;
         duck->s.height = 50;
@@ -127,6 +147,8 @@ int main(void)
         glXSwapBuffers(dpy, win);
     }
     cleanupXWindows();
+    //Gerardo
+    cleanup_fonts();
     return 0;
 }
 
@@ -183,6 +205,11 @@ void init_opengl(void)
     glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, -1, 1);
     //Set the screen background color
     glClearColor(0.1, 0.1, 0.1, 1.0);
+    
+    //Gerardo 
+    //Needed for Text
+    glEnable(GL_TEXTURE_2D);
+    initialize_fonts();
 }
 
 void makeDuck(Game *game, float x, float y)
@@ -328,6 +355,42 @@ void render(Game *game)
     glVertex2f(0.0, game->floor);
     glVertex2f(WINDOW_WIDTH, game->floor);
     glEnd();
+
+	//GERARDO
+	//Printing text in Boxes
+	Rect r;
+	glClear(GL_COLOR_BUFFER_BIT);
+	r.bot = WINDOW_HEIGHT - 550;
+	r.left = WINDOW_WIDTH - 715;
+	r.center = 0;
+		
+//box1[i].center.x = WINDOW_WIDTH - 675;
+//box1[i].center.y = WINDOW_HEIGHT - 550;
+    
+//Drawing Boxes
+	Shape *s;
+	//glColor3ub(90,140,90);
+	
+	for (int i = 0; i<1; i++)
+	{
+		//glColor3ub(90,140,90);
+		s = &game->box1[i];
+		glPushMatrix();
+		glTranslatef(s->center.x, s->center.y, s->center.z);
+		w = s->width;
+		h = s->height;
+		
+		glBegin(GL_QUADS);
+		glVertex2f(-w, -h);
+		glVertex2f(-w,  h);
+		glVertex2f( w,  h);
+		glVertex2f( w, -h);
+		glEnd();
+		glPopMatrix();
+		ggprint16(&r, 16, 0x00ff0000, "BULLETS: ");
+	}
+		
+
 
     //glPushMatrix();
     Duck *d;
