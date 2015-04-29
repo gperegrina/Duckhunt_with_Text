@@ -99,7 +99,7 @@ struct Game {
         n = 0;
 	//Gerardo
 	//Added for Box
-	for (int i = 0; i< 1; i++) {
+	for (int i = 0; i<= 2; i++) {
 		box1[i].width = 45;
 		box1[i].height = 35;
 		box1[i].center.x = WINDOW_WIDTH - 675;
@@ -359,20 +359,17 @@ void render(Game *game)
 	//GERARDO
 	//Printing text in Boxes
 	Rect r;
-	glClear(GL_COLOR_BUFFER_BIT);
+//	glClear(GL_COLOR_BUFFER_BIT);
 	r.bot = WINDOW_HEIGHT - 550;
 	r.left = WINDOW_WIDTH - 715;
 	r.center = 0;
-		
-//box1[i].center.x = WINDOW_WIDTH - 675;
-//box1[i].center.y = WINDOW_HEIGHT - 550;
     
 //Drawing Boxes
 	Shape *s;
 	//glColor3ub(90,140,90);
-	
-	for (int i = 0; i<1; i++)
-	{
+
+//left box with Bullets	
+	for (int i = 0; i<1; i++) {
 		//glColor3ub(90,140,90);
 		s = &game->box1[i];
 		glPushMatrix();
@@ -387,10 +384,75 @@ void render(Game *game)
 		glVertex2f( w, -h);
 		glEnd();
 		glPopMatrix();
-		ggprint16(&r, 16, 0x00ff0000, "BULLETS: ");
+		ggprint16(&r, 16, 0x00ff0000, "SHOT: ");
+		r.bot = WINDOW_HEIGHT - 575;
+		r.left = WINDOW_WIDTH - 685;
+            	//game->bullets = 3;
+		int a = game->bullets;
+		if(a == 3)		
+			ggprint16(&r, 16, 0x00ff0000, "3");
+		if(a == 2)		
+			ggprint16(&r, 16, 0x00ff0000, "2");
+		if(a == 1)		
+			ggprint16(&r, 16, 0x00ff0000, "1");
+		if(a == 0)		
+			ggprint16(&r, 16, 0x00ff0000, "0");
+	
 	}
+	//Shape *s2;
+	for (int i = 0; i < 1; i++) {
+		glColor3ub(90,140,90);
+		s = &game->box1[1];
+		glPushMatrix();
+		s->width = 100;
+		s->height = 35;
+		s->center.x = WINDOW_WIDTH - 400;
+		s->center.y = WINDOW_HEIGHT - 550;
+		s->center.z = 0;
+		glTranslatef(s->center.x, s->center.y, s->center.z);
+	
+		w = s->width;
+		h = s->height;
 		
+		glBegin(GL_QUADS);
+		glVertex2f(-w, -h);
+		glVertex2f(-w,  h);
+		glVertex2f( w,  h);
+		glVertex2f( w, -h);
+		glEnd();
+		
+		r.bot = WINDOW_HEIGHT - 550;
+		r.left = WINDOW_WIDTH - 475;
+		glPopMatrix();
+		ggprint16(&r, 16, 0x00ff0000, "HIT: ");
+	}
 
+	for (int i = 0; i < 1; i++) {
+		glColor3ub(90,140,90);
+		s = &game->box1[2];
+		glPushMatrix();
+		s->width = 75;
+		s->height = 35;
+		s->center.x = WINDOW_WIDTH - 150;
+		s->center.y = WINDOW_HEIGHT - 550;
+		s->center.z = 0;
+		glTranslatef(s->center.x, s->center.y, s->center.z);
+	
+		w = s->width;
+		h = s->height;
+		
+		glBegin(GL_QUADS);
+		glVertex2f(-w, -h);
+		glVertex2f(-w,  h);
+		glVertex2f( w,  h);
+		glVertex2f( w, -h);
+		glEnd();
+		
+		r.bot = WINDOW_HEIGHT - 550;
+		r.left = WINDOW_WIDTH - 200;
+		glPopMatrix();
+		ggprint16(&r, 16, 0x00ff0000, "SCORE: ");
+	}
 
     //glPushMatrix();
     Duck *d;
